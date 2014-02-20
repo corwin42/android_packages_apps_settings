@@ -1,3 +1,17 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.android.settings.rascarlo;
 
 import android.os.Bundle;
@@ -15,15 +29,11 @@ import com.android.settings.SettingsPreferenceFragment;
 public class VolumeRocker extends SettingsPreferenceFragment implements OnPreferenceChangeListener {
 
     private static final String KEY_VOLUME_OVERLAY = "volume_overlay";
-    private static final String KEY_VOLUME_ADJUST_SOUNDS = "volume_adjust_sounds";
-    private static final String KEY_VOLUME_WAKE = "pref_volume_wake";
     private static final String KEY_VOLBTN_MUSIC_CTRL = "volbtn_music_controls";
     private static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
     private static final String KEY_SAFE_HEADSET_VOLUME = "safe_headset_volume";
 
     private ListPreference mVolumeOverlay;
-    private CheckBoxPreference mVolumeAdjustSounds;
-    private CheckBoxPreference mVolumeWake;
     private CheckBoxPreference mVolBtnMusicCtrl;
     private ListPreference mVolumeKeyCursorControl;
     private CheckBoxPreference mSafeHeadsetVolume;
@@ -41,14 +51,6 @@ public class VolumeRocker extends SettingsPreferenceFragment implements OnPrefer
                 VolumePanel.VOLUME_OVERLAY_EXPANDABLE);
         mVolumeOverlay.setValue(Integer.toString(volumeOverlay));
         mVolumeOverlay.setSummary(mVolumeOverlay.getEntry());
-
-        mVolumeAdjustSounds = (CheckBoxPreference) findPreference(KEY_VOLUME_ADJUST_SOUNDS);
-        mVolumeAdjustSounds.setChecked(Settings.System.getInt(getActivity().getContentResolver(),
-                Settings.System.VOLUME_ADJUST_SOUNDS_ENABLED, 1) != 0);
-
-        mVolumeWake = (CheckBoxPreference) findPreference(KEY_VOLUME_WAKE);
-        mVolumeWake.setChecked(Settings.System.getInt(getActivity().getContentResolver(),
-                    Settings.System.VOLUME_WAKE_SCREEN, 0) == 1);
 
         mVolBtnMusicCtrl = (CheckBoxPreference) findPreference(KEY_VOLBTN_MUSIC_CTRL);
         mVolBtnMusicCtrl.setChecked(Settings.System.getInt(getActivity().getContentResolver(),
@@ -73,19 +75,11 @@ public class VolumeRocker extends SettingsPreferenceFragment implements OnPrefer
 
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
-        if (preference == mVolumeWake) {
-            Settings.System.putInt(getActivity().getContentResolver(),
-                    Settings.System.VOLUME_WAKE_SCREEN,
-                    mVolumeWake.isChecked()
-                    ? 1 : 0);
-         } else if (preference == mVolBtnMusicCtrl) {
+         if (preference == mVolBtnMusicCtrl) {
             Settings.System.putInt(getActivity().getContentResolver(),
                     Settings.System.VOLBTN_MUSIC_CONTROLS,
                     mVolBtnMusicCtrl.isChecked()
                     ? 1 : 0);
-         } else if (preference == mVolumeAdjustSounds) {
-             Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_ADJUST_SOUNDS_ENABLED,
-                     mVolumeAdjustSounds.isChecked() ? 1 : 0);
          } else if (preference == mSafeHeadsetVolume) {
              Settings.System.putInt(getActivity().getContentResolver(),
                      Settings.System.SAFE_HEADSET_VOLUME,
